@@ -1,10 +1,11 @@
 
 # Usage
 
-This package contains a simple file cache. That is, a cache implemented through
+This package implements a simple file cache. That is, a cache implemented through
 files. This kind of caching is useful if the data that you want to cache is
-stored in an external resource (e.g. an external API). Let's show some code
-as an example:
+stored in an external resource (e.g. an external API). This cache also
+considers an expiration time for each of the files that it stores. Let's show 
+some code as an example:
 
     // ...
     cache := NewCache("/tmp/fcache", 1*time.Hour, 0774)
