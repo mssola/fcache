@@ -21,6 +21,9 @@ type Cache struct {
 
     // The expiration time to be set for each file.
     Expiration time.Duration
+
+    // The permissions to be set when this cache creates new files.
+    Permissions os.FileMode
 }
 
 // Internal: get whether the cache file is still hot (valid) or not.
@@ -39,14 +42,16 @@ func (c *Cache) isHot(mod time.Time) bool {
 //              exist, it will create a new directory with permissions 0644.
 // expiration - The expiration time. That is, how many nanoseconds has to pass
 //              by when a cache file is no longer considered valid.
+// perm       - The permissions that the cache should operate in when creating
+//              new files.
 //
 // Returns a Cache pointer that points to an initialized Cache structure. It
 // will return nil if something goes wrong.
-func NewCache(dir string, expiration time.Duration) *Cache {
+func NewCache(dir string, expiration time.Duration, perm os.FileMode) *Cache {
     // First of all, get the directory path straight.
     if _, err := os.Stat(dir); err != nil {
         if os.IsNotExist(err) {
-            if err = os.MkdirAll(dir, 0774); err != nil {
+            if err = os.MkdirAll(dir, perm); err != nil {
                 fmt.Printf("Error: %v\n", err)
                 return nil
             }
@@ -60,6 +65,7 @@ func NewCache(dir string, expiration time.Duration) *Cache {
     cache := new(Cache)
     cache.Dir = dir
     cache.Expiration = expiration
+    cache.Permissions = perm
     return cache
 }
 
@@ -73,7 +79,7 @@ func NewCache(dir string, expiration time.Duration) *Cache {
 // Returns nil if everything was ok. Otherwise it will return an error.
 func (c *Cache) Set(name string, contents []byte) error {
     url := path.Join(c.Dir, name)
-    return ioutil.WriteFile(url, contents, 0774)
+    return ioutil.WriteFile(url, contents, c.Permissions)
 }
 
 // Get the contents of a valid cache file.
@@ -113,7 +119,7 @@ func (c *Cache) FlushAll(name string) error {
     url := path.Join(c.Dir, name)
     err := os.RemoveAll(url)
     if err == nil {
-        err = os.MkdirAll(url, 0774)
+        err = os.MkdirAll(url, c.Permissions)
     }
     return err
 }

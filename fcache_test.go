@@ -18,7 +18,7 @@ func TestNewCache(t *testing.T) {
     os.RemoveAll("/tmp/mssola/fcache")
     _, err := os.Stat(dir)
     assert.Equal(t, os.IsNotExist(err), true)
-    cache := NewCache(dir, 2 * time.Second)
+    cache := NewCache(dir, 2 * time.Second, 0774)
 
     // We first check that the members are properly set.
     assert.Equal(t, cache.Dir, dir)
