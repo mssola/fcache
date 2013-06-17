@@ -112,11 +112,9 @@ func (c *Cache) Flush(name string) error {
 
 // Remove all the files from the cache.
 //
-// name - The name of the file.
-//
 // Returns nil if everything was ok. Otherwise it will return an error.
-func (c *Cache) FlushAll(name string) error {
-    url := path.Join(c.Dir, name)
+func (c *Cache) FlushAll() error {
+    url := path.Join(c.Dir)
     err := os.RemoveAll(url)
     if err == nil {
         err = os.MkdirAll(url, c.Permissions)
