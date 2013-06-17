@@ -16,7 +16,7 @@ import (
 
 // This type contains some needed info that will be used when caching.
 type Cache struct {
-    // The directory
+    // The directory.
     Dir string
 
     // The expiration time to be set for each file.
@@ -29,7 +29,7 @@ type Cache struct {
 // Get a pointer to an initialized Cache structure.
 //
 // dir        - The path to the cache directory. If the directory does not
-//              exist, it will create a new directory with permissions 0644.
+//              exist, it will create it for you.
 // expiration - The expiration time. That is, how many nanoseconds has to pass
 //              by when a cache file is no longer considered valid.
 // perm       - The permissions that the cache should operate in when creating
@@ -60,7 +60,7 @@ func NewCache(dir string, expiration time.Duration, perm os.FileMode) *Cache {
 }
 
 // Set the contents for a cache file. If this file doesn't exist already, it
-// will be created with permissions 0644.
+// will be created for you.
 //
 // name     - The name of the file.
 // contents - The contents that the cache file has to contain after calling
