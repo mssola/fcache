@@ -1,5 +1,5 @@
 
-# Usage
+# FCache [![Build Status](https://travis-ci.org/mssola/fcache.png?branch=master)](https://travis-ci.org/mssola/fcache)
 
 This package implements a simple file cache. That is, a cache implemented through
 files. This kind of caching is useful if the data that you want to cache is
