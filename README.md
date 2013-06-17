@@ -7,7 +7,7 @@ considers an expiration time for each of the files that it stores. Let's show
 some code as an example:
 
     // ...
-    cache := NewCache("/tmp/fcache", 1*time.Hour, 0774)
+    cache := fcache.NewCache("/tmp/fcache", 1*time.Hour, 0774)
     cache.Set("file.txt", []byte("Some contents."))
     fmt.Printf("%v\n", cache.Get("file.txt"))
     // ...
