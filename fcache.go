@@ -16,7 +16,7 @@ import (
 
 // This type contains some needed info that will be used when caching.
 type Cache struct {
-    // The directory 
+    // The directory
     Dir string
 
     // The expiration time to be set for each file.
