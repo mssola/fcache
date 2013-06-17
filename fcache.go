@@ -46,7 +46,7 @@ func NewCache(dir string, expiration time.Duration) *Cache {
     // First of all, get the directory path straight.
     if _, err := os.Stat(dir); err != nil {
         if os.IsNotExist(err) {
-            if err = os.MkdirAll(dir, 0644); err != nil {
+            if err = os.MkdirAll(dir, 0774); err != nil {
                 fmt.Printf("Error: %v\n", err)
                 return nil
             }
@@ -73,7 +73,7 @@ func NewCache(dir string, expiration time.Duration) *Cache {
 // Returns nil if everything was ok. Otherwise it will return an error.
 func (c *Cache) Set(name string, contents []byte) error {
     url := path.Join(c.Dir, name)
-    return ioutil.WriteFile(url, contents, 0644)
+    return ioutil.WriteFile(url, contents, 0774)
 }
 
 // Get the contents of a valid cache file.
@@ -113,7 +113,7 @@ func (c *Cache) FlushAll(name string) error {
     url := path.Join(c.Dir, name)
     err := os.RemoveAll(url)
     if err == nil {
-        err = os.MkdirAll(url, 0644)
+        err = os.MkdirAll(url, 0774)
     }
     return err
 }
