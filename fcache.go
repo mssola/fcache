@@ -26,16 +26,6 @@ type Cache struct {
     Permissions os.FileMode
 }
 
-// Internal: get whether the cache file is still hot (valid) or not.
-//
-// mod - The last modification time of the cache file.
-//
-// Returns true if the cache file is still valid, false otherwise.
-func (c *Cache) isHot(mod time.Time) bool {
-    elapsed := time.Now().Sub(mod)
-    return c.Expiration > elapsed
-}
-
 // Get a pointer to an initialized Cache structure.
 //
 // dir        - The path to the cache directory. If the directory does not
@@ -91,7 +81,8 @@ func (c *Cache) Set(name string, contents []byte) error {
 func (c *Cache) Get(name string) ([]byte, error) {
     url := path.Join(c.Dir, name)
     if fi, err := os.Stat(url); err == nil {
-        if c.isHot(fi.ModTime()) {
+        elapsed := time.Now().Sub(fi.ModTime())
+        if c.Expiration > elapsed {
             return ioutil.ReadFile(url)
         }
         // Remove this file, its time has expired.
