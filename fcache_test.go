@@ -69,6 +69,9 @@ func TestGetNonExistent(t *testing.T) {
     assert.NotEqual(t, err, nil)
     assert.Equal(t, err.Error(), "miss.")
 
+    // Check the isValid function.
+    assert.Equal(t, false, cache.IsValid("file.txt"))
+
     os.RemoveAll(basePath)
 }
 
@@ -88,6 +91,9 @@ func TestGetInvalid(t *testing.T) {
     assert.NotEqual(t, err, nil)
     assert.Equal(t, err.Error(), "miss.")
 
+    // Check the isValid function.
+    assert.Equal(t, false, cache.IsValid("file.txt"))
+
     // It gets removed when it's known to be cold.
     _, err = os.Stat(cachePath + "/file.txt")
     assert.Equal(t, os.IsNotExist(err), true)
@@ -105,11 +111,20 @@ func TestGetValid(t *testing.T) {
     assert.Equal(t, got, []byte("contents"))
     assert.Equal(t, err, nil)
 
+    // Check the isValid function.
+    assert.Equal(t, true, cache.IsValid("file.txt"))
+
     // It remains untouched, because everything is fine.
     _, err = os.Stat(cachePath + "/file.txt")
     assert.Equal(t, err, nil)
 
     os.RemoveAll(basePath)
+}
+
+func TestPath(t *testing.T) {
+    cache := NewCache(cachePath, 2 * time.Second, 0774)
+    path := cache.Path("file.txt")
+    assert.Equal(t, path, cachePath + "/file.txt")
 }
 
 func TestFlush(t *testing.T) {

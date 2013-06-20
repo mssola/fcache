@@ -91,6 +91,31 @@ func (c *Cache) Get(name string) ([]byte, error) {
     return []byte{}, errors.New("miss.")
 }
 
+// Get if the given file is valid. This function is useful if you don't want
+// to read the contents of the file.
+//
+// name - The name of the file.
+//
+// Returns true if the given file is valid, false otherwise.
+func (c *Cache) IsValid(name string) bool {
+    url := path.Join(c.Dir, name)
+    if fi, err := os.Stat(url); err == nil {
+        elapsed := time.Now().Sub(fi.ModTime())
+        return c.Expiration > elapsed
+    }
+    return false
+}
+
+// Get the path of the file cache. Note that this function does not check
+// whether this file is valid or not.
+//
+// name - The name of the file.
+//
+// Returns a string containing the full path to the file.
+func (c *Cache) Path(name string) string {
+    return path.Join(c.Dir, name)
+}
+
 // Remove a cache file.
 //
 // name - The name of the file.
